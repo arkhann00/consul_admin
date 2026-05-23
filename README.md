@@ -48,7 +48,7 @@ npm run preview
 docker compose up --build
 ```
 
-Админка: http://localhost:8080 (порт задаётся через `ADMIN_PORT`).
+Админка: http://localhost:8082 (порт задаётся через `ADMIN_PORT`).
 
 Переменные — см. `.env.docker.example`:
 
@@ -62,7 +62,7 @@ docker compose up --build
 
 ```bash
 docker build --build-arg VITE_API_BASE_URL=http://127.0.0.1:8000 -t consul-admin .
-docker run -p 8080:80 consul-admin
+docker run -p 8082:80 consul-admin
 ```
 
 ### Development (hot reload)
