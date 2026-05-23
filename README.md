@@ -4,84 +4,68 @@
 
 ## Возможности
 
-- Вход администратора (`is_admin: true`)
-- Автообновление access token через refresh (ротация)
-- CRUD врачей (multipart + JSON)
-- CRUD новостей (multipart + JSON)
+- CRUD врачей и новостей (multipart + JSON)
 - Загрузка изображений до 5 MB
+- Docker: nginx проксирует API на бэкенд
 
-## Запуск
+## Конфигурация — один файл `.env`
 
-1. Убедитесь, что бэкенд доступен (по умолчанию `http://5.42.113.18:8081`)
-2. Создайте администратора на сервере: `uv run python scripts/create_admin.py`
-3. Установите зависимости и запустите фронт:
+```bash
+cp .env.example .env
+```
+
+| Переменная | Назначение |
+|------------|------------|
+| `ADMIN_PORT` | Порт админки снаружи (по умолчанию **8082**) |
+| `API_UPSTREAM` | Адрес бэкенда для nginx в Docker (по умолчанию **http://5.42.113.18:8081**) |
+| `VITE_API_BASE_URL` | URL API для `npm run dev` (из браузера) |
+
+На том же сервере, что и бэкенд, часто лучше:
+
+```env
+API_UPSTREAM=http://172.17.0.1:8081
+```
+
+## Docker (production)
+
+```bash
+docker compose up --build -d
+```
+
+- Админка: http://5.42.113.18:8082 (или `http://localhost:8082`)
+- Бэкенд: значение `API_UPSTREAM` в `.env`
+
+Проверка:
+
+```bash
+curl http://5.42.113.18:8081/health
+curl http://5.42.113.18:8082/health
+docker compose exec admin grep proxy_pass /etc/nginx/conf.d/default.conf
+```
+
+## Локальная разработка
 
 ```bash
 npm install
 npm run dev
 ```
 
-Откройте http://localhost:5173
+Используется `VITE_API_BASE_URL` из `.env`. Откройте http://localhost:5173
 
-## Переменные окружения
-
-Скопируйте `.env.example` в `.env`:
-
-```
-ADMIN_PORT=8082
-API_UPSTREAM=http://5.42.113.18:8081
-VITE_API_BASE_URL=http://5.42.113.18:8081
-```
-
-## Сборка
+## Сборка без Docker
 
 ```bash
 npm run build
 npm run preview
 ```
 
-## Docker
-
-### Production (nginx + статика)
-
-Админка: **http://сервер:8082**. Nginx проксирует `/api`, `/uploads` и `/health` на бэкенд **http://5.42.113.18:8081** (задаётся в `.env` → `API_UPSTREAM`).
-
-```bash
-docker compose up --build
-```
-
-Админка: http://localhost:8082 (или http://5.42.113.18:8082 на сервере).
-
-Переменные — см. `.env.docker.example`:
-
-```bash
-cp .env.docker.example .env
-# при необходимости: API_UPSTREAM=http://api:8081
-docker compose up --build
-```
-
-Сборка с явным URL API (без прокси nginx):
-
-```bash
-docker build --build-arg VITE_API_BASE_URL=http://127.0.0.1:8081 -t consul-admin .
-docker run -p 8082:80 consul-admin
-```
-
-### Development (hot reload)
-
-```bash
-docker compose -f docker-compose.dev.yml up --build
-```
-
-http://localhost:5173 — `VITE_API_BASE_URL` по умолчанию `http://127.0.0.1:8081`.
-
 ## Структура
 
 ```
+.env              # единый конфиг (не коммитить секреты)
+.env.example      # шаблон
+docker-compose.yml
+Dockerfile
+nginx/
 src/
-  api/          # client, auth, doctors, news
-  auth/         # токены, AuthContext
-  components/   # Layout, ProtectedRoute, …
-  pages/        # Login, Dashboard, Doctors, News
-  utils/        # mediaUrl, validation
 ```
