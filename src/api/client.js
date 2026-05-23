@@ -7,7 +7,7 @@ export function getBaseUrl() {
   const env = import.meta.env.VITE_API_BASE_URL;
   if (env === '') return '';
   if (env) return env;
-  return 'http://127.0.0.1:8000';
+  return 'http://5.42.113.18:8081';
 }
 
 export function apiUrl(path) {

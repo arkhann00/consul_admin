@@ -17,7 +17,7 @@ RUN npm run build
 
 FROM nginx:1.27-alpine
 
-ENV API_UPSTREAM=http://host.docker.internal:8000
+ENV API_UPSTREAM=http://5.42.113.18:8081
 
 COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /app/dist /usr/share/nginx/html

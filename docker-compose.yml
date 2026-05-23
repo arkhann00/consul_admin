@@ -9,8 +9,8 @@ services:
     ports:
       - "${ADMIN_PORT:-8082}:80"
     environment:
-      # URL бэкенда с точки зрения контейнера nginx
-      API_UPSTREAM: ${API_UPSTREAM:-http://host.docker.internal:8000}
+      # Адрес бэкенда (nginx проксирует /api, /uploads, /health)
+      API_UPSTREAM: ${API_UPSTREAM:-http://5.42.113.18:8081}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped

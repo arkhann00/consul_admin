@@ -9,8 +9,8 @@ services:
       - .:/app
       - admin_node_modules:/app/node_modules
     environment:
-      # С браузера на хосте бэкенд обычно на localhost:8000
-      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://127.0.0.1:8000}
+      # С браузера на хосте бэкенд обычно на localhost:8081
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://5.42.113.18:8081}
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
