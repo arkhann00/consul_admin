@@ -1,4 +1,4 @@
-import { request } from './client';
+import { request, apiUrl } from './client';
 
 export function listNews(skip = 0, limit = 100) {
   return request(`/news?skip=${skip}&limit=${limit}`, { auth: false });
@@ -9,6 +9,8 @@ export function getNewsItem(id) {
 }
 
 export function createNewsMultipart(formData) {
+  const url = apiUrl('/news');
+  console.log('[news] create (multipart) →', url);
   return request('/news', {
     method: 'POST',
     body: formData,
@@ -16,6 +18,8 @@ export function createNewsMultipart(formData) {
 }
 
 export function createNewsJson(data) {
+  const url = apiUrl('/news/json');
+  console.log('[news] create (json) →', url);
   return request('/news/json', {
     method: 'POST',
     body: JSON.stringify(data),
