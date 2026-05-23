@@ -1,8 +1,8 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
+// import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
-import Login from './pages/Login';
+// import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import DoctorsList from './pages/doctors/DoctorsList';
 import DoctorForm from './pages/doctors/DoctorForm';
@@ -14,15 +14,11 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          {/* Вход временно отключён — панель доступна без авторизации */}
+          {/* <Route path="/login" element={<Login />} /> */}
 
-          <Route
-            element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
+          <Route element={<Layout />}>
+            {/* <ProtectedRoute><Layout /></ProtectedRoute> */}
             <Route index element={<Dashboard />} />
             <Route path="doctors" element={<DoctorsList />} />
             <Route path="doctors/new" element={<DoctorForm />} />

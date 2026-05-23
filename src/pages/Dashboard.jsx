@@ -1,15 +1,12 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../auth/AuthContext';
 
 export default function Dashboard() {
-  const { user } = useAuth();
-
   return (
     <div className="page">
       <header className="page-header">
         <div>
           <h1>Главная</h1>
-          <p className="muted">Добро пожаловать, {user?.name}</p>
+          <p className="muted">Админ-панель Consilium</p>
         </div>
       </header>
 

@@ -4,11 +4,19 @@ import { hasTokens } from './tokenStorage';
 
 const AuthContext = createContext(null);
 
+/** Временно: панель без входа */
+const AUTH_DISABLED = true;
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!AUTH_DISABLED);
 
   const loadUser = useCallback(async () => {
+    if (AUTH_DISABLED) {
+      setLoading(false);
+      return;
+    }
+
     if (!hasTokens()) {
       setUser(null);
       setLoading(false);
@@ -56,8 +64,8 @@ export function AuthProvider({ children }) {
   const value = useMemo(
     () => ({
       user,
-      loading,
-      isAuthenticated: Boolean(user),
+      loading: AUTH_DISABLED ? false : loading,
+      isAuthenticated: AUTH_DISABLED ? true : Boolean(user),
       login,
       logout,
       refreshUser: loadUser,
