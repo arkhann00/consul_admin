@@ -1,0 +1,16 @@
+services:
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Пустая строка: браузер ходит на тот же хост, nginx проксирует /api и /uploads
+        VITE_API_BASE_URL: ""
+    ports:
+      - "${ADMIN_PORT:-8080}:80"
+    environment:
+      # URL бэкенда с точки зрения контейнера nginx
+      API_UPSTREAM: ${API_UPSTREAM:-http://host.docker.internal:8000}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

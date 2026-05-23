@@ -1,15 +1,18 @@
 import { getAccessToken, getRefreshToken, setTokens, clearTokens } from '../auth/tokenStorage';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
 export const API_PREFIX = '/api/v1';
 
+/** @returns {string} Пустая строка = same-origin (nginx в Docker проксирует /api) */
 export function getBaseUrl() {
-  return BASE_URL;
+  const env = import.meta.env.VITE_API_BASE_URL;
+  if (env === '') return '';
+  if (env) return env;
+  return 'http://127.0.0.1:8000';
 }
 
 export function apiUrl(path) {
   const normalized = path.startsWith('/') ? path : `/${path}`;
-  return `${BASE_URL}${API_PREFIX}${normalized}`;
+  return `${getBaseUrl()}${API_PREFIX}${normalized}`;
 }
 
 let refreshPromise = null;

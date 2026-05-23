@@ -38,6 +38,41 @@ npm run build
 npm run preview
 ```
 
+## Docker
+
+### Production (nginx + статика)
+
+Бэкенд должен быть доступен. По умолчанию nginx проксирует `/api`, `/uploads` и `/health` на `http://host.docker.internal:8000`.
+
+```bash
+docker compose up --build
+```
+
+Админка: http://localhost:8080 (порт задаётся через `ADMIN_PORT`).
+
+Переменные — см. `.env.docker.example`:
+
+```bash
+cp .env.docker.example .env
+# при необходимости: API_UPSTREAM=http://api:8000
+docker compose up --build
+```
+
+Сборка с явным URL API (без прокси nginx):
+
+```bash
+docker build --build-arg VITE_API_BASE_URL=http://127.0.0.1:8000 -t consul-admin .
+docker run -p 8080:80 consul-admin
+```
+
+### Development (hot reload)
+
+```bash
+docker compose -f docker-compose.dev.yml up --build
+```
+
+http://localhost:5173 — `VITE_API_BASE_URL` по умолчанию `http://127.0.0.1:8000`.
+
 ## Структура
 
 ```
